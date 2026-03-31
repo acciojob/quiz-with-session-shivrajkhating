@@ -1,1 +1,106 @@
-/*  your css code here. If applicable */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.quiz-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+#questions > div {
+  background: #f8f9ff;
+  border: 1px solid #e2e6f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+
+#questions > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#questions > div p {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+#questions > div label {
+  display: block;
+  padding: 10px 14px;
+  margin: 6px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #555;
+  font-size: 15px;
+}
+
+#questions > div label:hover {
+  background: #eef0ff;
+}
+
+#questions > div label input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #667eea;
+  transform: scale(1.15);
+}
+
+#submit {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  margin-top: 10px;
+}
+
+#submit:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+#submit:active {
+  transform: translateY(0);
+}
+
+#score {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 20px;
+  color: #333;
+  min-height: 30px;
+}

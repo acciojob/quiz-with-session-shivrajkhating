@@ -1,135 +1,145 @@
-// ─── Quiz Data ─────────────────────────────────────────────────────────────────
-// ⚠️  IMPORTANT: Open  cypress/integration/tests/test.spec.js
-//     Find the `questions` array defined there and copy it here EXACTLY.
-//     The structure the test expects:  { question: "...", choices: [...], answer: "..." }
-//
-//     The questions below are best-guess placeholders.
-//     If your tests still fail on question text, replace this array with yours.
-
-const questions = [
+const quizData = [
   {
-    question: "What is the capital of France?",
-    choices: ["Paris", "London", "Berlin", "Rome"],
-    answer: "Paris",
+    question: "1. Which keyword is used to declare a variable in JavaScript?",
+    options: ["var", "int", "string", "define"],
+    answer: "var",
   },
   {
-    question: "What is the highest mountain in the world?",
-    choices: ["Mount Everest", "K2", "Kangchenjunga", "Lhotse"],
-    answer: "Mount Everest",
+    question: "2. What does HTML stand for?",
+    options: [
+      "Hyper Text Markup Language",
+      "High Tech Modern Language",
+      "Hyper Transfer Markup Language",
+      "Home Tool Markup Language",
+    ],
+    answer: "Hyper Text Markup Language",
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    choices: ["Mars", "Venus", "Jupiter", "Saturn"],
-    answer: "Mars",
+    question: "3. Which method is used to add an element at the end of an array?",
+    options: ["push()", "pop()", "shift()", "unshift()"],
+    answer: "push()",
   },
   {
-    question: "How many sides does a hexagon have?",
-    choices: ["5", "6", "7", "8"],
-    answer: "6",
+    question: "4. What does CSS stand for?",
+    options: [
+      "Cascading Style Sheets",
+      "Creative Style System",
+      "Computer Style Sheets",
+      "Colorful Style Sheets",
+    ],
+    answer: "Cascading Style Sheets",
   },
   {
-    question: "What is the chemical symbol for water?",
-    choices: ["H2O", "CO2", "NaCl", "O2"],
-    answer: "H2O",
+    question: "5. Which symbol is used for single-line comments in JavaScript?",
+    options: ["//", "/* */", "#", "--"],
+    answer: "//",
   },
 ];
 
-// ─── Restore progress from sessionStorage ─────────────────────────────────────
-let progress = {};
-try {
-  const saved = sessionStorage.getItem("progress");
-  if (saved) progress = JSON.parse(saved);
-} catch (e) {
-  progress = {};
-}
+// ==================== Render Questions ====================
 
-// ─── Render Questions ─────────────────────────────────────────────────────────
-const container = document.getElementById("questions");
+const questionsContainer = document.getElementById("questions");
+const submitBtn = document.getElementById("submit");
+const scoreDisplay = document.getElementById("score");
 
-questions.forEach((q, index) => {
-  const card = document.createElement("div");
+function renderQuiz() {
+  questionsContainer.innerHTML = "";
 
-  // ✅ FIX 1: Question text is the FIRST content inside the card.
-  //    Cypress does: $ele.text().split("?")[0] + "?"
-  //    So no prefix text (like "Question 1 of 5") must appear before the question.
-  const qText = document.createElement("p");
-  qText.className = "q-text";
-  qText.textContent = q.question;
-  card.appendChild(qText);
+  quizData.forEach((q, index) => {
+    const questionDiv = document.createElement("div");
 
-  // Options
-  const optionsDiv = document.createElement("div");
-  optionsDiv.className = "options";
+    const questionText = document.createElement("p");
+    questionText.textContent = q.question;
+    questionDiv.appendChild(questionText);
 
-  q.choices.forEach((choice) => {
-    const label = document.createElement("label");
-    label.className = "option-label";
+    q.options.forEach((option) => {
+      const label = document.createElement("label");
 
-    const radio = document.createElement("input");
-    radio.type  = "radio";
-    radio.name  = `q${index}`;   // unique name per question
-    radio.value = choice;         // Cypress checks input[value]
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = `question${index}`;
+      radio.value = option;
 
-    // ✅ FIX 2: setAttribute("checked","true") so the CSS attribute selector
-    //    [type="radio"][checked="true"] works in Cypress after a page reload.
-    //    radio.checked = true  only sets the DOM property — not the HTML attribute.
-    if (progress[`q${index}`] === choice) {
-      radio.setAttribute("checked", "true");
-      radio.checked = true; // also set property so the browser renders it checked
-    }
+      radio.addEventListener("change", () => saveProgress());
 
-    // Persist every selection to sessionStorage
-    radio.addEventListener("change", () => {
-      // Remove checked attribute from siblings first
-      document
-        .querySelectorAll(`input[name="q${index}"]`)
-        .forEach((r) => r.removeAttribute("checked"));
-
-      // Set on the selected one
-      radio.setAttribute("checked", "true");
-
-      progress[`q${index}`] = choice;
-      sessionStorage.setItem("progress", JSON.stringify(progress));
-      updateUI();
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(option));
+      questionDiv.appendChild(label);
     });
 
-    const span = document.createElement("span");
-    span.textContent = choice;
-
-    label.appendChild(radio);
-    label.appendChild(span);
-    optionsDiv.appendChild(label);
+    questionsContainer.appendChild(questionDiv);
   });
-
-  card.appendChild(optionsDiv);
-  container.appendChild(card);
-});
-
-// ─── Progress indicator ────────────────────────────────────────────────────────
-function updateUI() {
-  const answered = Object.keys(progress).length;
-  const bar = document.getElementById("progressBar");
-  if (bar) bar.style.width = `${(answered / questions.length) * 100}%`;
-  const countEl = document.getElementById("answersCount");
-  if (countEl)
-    countEl.textContent = `${answered} of ${questions.length} answered`;
 }
-updateUI();
 
-// ─── Submit ────────────────────────────────────────────────────────────────────
-document.getElementById("submit").addEventListener("click", () => {
-  // Calculate score
-  let score = 0;
-  questions.forEach((q, index) => {
-    if (progress[`q${index}`] === q.answer) score++;
+// ==================== Session Storage (Progress) ====================
+
+function saveProgress() {
+  const progress = {};
+
+  quizData.forEach((_, index) => {
+    const selected = document.querySelector(
+      `input[name="question${index}"]:checked`
+    );
+    if (selected) {
+      progress[`question${index}`] = selected.value;
+    }
   });
 
-  // ✅ FIX 3: Score must be PLAIN TEXT only — no wrapping HTML elements.
-  //    Cypress: expect(span.text()).equal("Your score is 3 out of 5.")
-  //    Any nested div/span/emoji breaks span.text() equality check.
-  const scoreEl = document.getElementById("score");
-  scoreEl.textContent = `Your score is ${score} out of ${questions.length}.`;
+  sessionStorage.setItem("progress", JSON.stringify(progress));
+}
 
-  // Store score in localStorage with key "score"
-  localStorage.setItem("score", String(score));
+function loadProgress() {
+  const saved = sessionStorage.getItem("progress");
+  if (!saved) return;
+
+  const progress = JSON.parse(saved);
+
+  Object.keys(progress).forEach((key) => {
+    const radios = document.querySelectorAll(`input[name="${key}"]`);
+    radios.forEach((radio) => {
+      if (radio.value === progress[key]) {
+        radio.checked = true;
+      }
+    });
+  });
+}
+
+// ==================== Score Calculation & Local Storage ====================
+
+function calculateScore() {
+  let score = 0;
+
+  quizData.forEach((q, index) => {
+    const selected = document.querySelector(
+      `input[name="question${index}"]:checked`
+    );
+    if (selected && selected.value === q.answer) {
+      score++;
+    }
+  });
+
+  return score;
+}
+
+submitBtn.addEventListener("click", () => {
+  const score = calculateScore();
+
+  scoreDisplay.textContent = `Your score is ${score} out of 5.`;
+
+  localStorage.setItem("score", JSON.stringify(score));
 });
+
+// ==================== Load Saved Score ====================
+
+function loadScore() {
+  const savedScore = localStorage.getItem("score");
+  if (savedScore !== null) {
+    scoreDisplay.textContent = `Your score is ${JSON.parse(savedScore)} out of 5.`;
+  }
+}
+
+// ==================== Initialize ====================
+
+renderQuiz();
+loadProgress();
+loadScore();
