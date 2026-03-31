@@ -13,9 +13,9 @@ const questions = [
     answer: "Paris",
   },
   {
-    question: "What is 2 + 2?",
-    choices: ["3", "4", "5", "6"],
-    answer: "4",
+    question: "What is the highest mountain in the world?",
+    choices: ["Mount Everest", "K2", "Kangchenjunga", "Lhotse"],
+    answer: "Mount Everest",
   },
   {
     question: "Which planet is known as the Red Planet?",
