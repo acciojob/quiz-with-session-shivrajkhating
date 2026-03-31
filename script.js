@@ -5,29 +5,24 @@ const quizData = [
     answer: "Paris",
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    choices: ["Mars", "Venus", "Jupiter", "Saturn"],
-    answer: "Mars",
+    question: "What is the highest mountain in the world?",
+    choices: ["Everest", "Kilimanjaro", "Denali", "Matterhorn"],
+    answer: "Everest",
   },
   {
-    question: "What is the largest ocean on Earth?",
-    choices: ["Atlantic", "Indian", "Arctic", "Pacific"],
-    answer: "Pacific",
+    question: "What is the largest country by area?",
+    choices: ["Russia", "China", "Canada", "United States"],
+    answer: "Russia",
   },
   {
-    question: "Who wrote 'Romeo and Juliet'?",
-    choices: [
-      "Charles Dickens",
-      "William Shakespeare",
-      "Mark Twain",
-      "Jane Austen",
-    ],
-    answer: "William Shakespeare",
+    question: "Which is the largest planet in our solar system?",
+    choices: ["Earth", "Jupiter", "Mars", "Saturn"],
+    answer: "Jupiter",
   },
   {
-    question: "What is the chemical symbol for water?",
-    choices: ["H2O", "CO2", "O2", "NaCl"],
-    answer: "H2O",
+    question: "What is the capital of Canada?",
+    choices: ["Toronto", "Montreal", "Vancouver", "Ottawa"],
+    answer: "Ottawa",
   },
 ];
 
