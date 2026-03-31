@@ -1,38 +1,33 @@
 const quizData = [
   {
-    question: "1. Which keyword is used to declare a variable in JavaScript?",
-    options: ["var", "int", "string", "define"],
-    answer: "var",
+    question: "What is the capital of France?",
+    choices: ["Paris", "London", "Berlin", "Madrid"],
+    answer: "Paris",
   },
   {
-    question: "2. What does HTML stand for?",
-    options: [
-      "Hyper Text Markup Language",
-      "High Tech Modern Language",
-      "Hyper Transfer Markup Language",
-      "Home Tool Markup Language",
+    question: "Which planet is known as the Red Planet?",
+    choices: ["Mars", "Venus", "Jupiter", "Saturn"],
+    answer: "Mars",
+  },
+  {
+    question: "What is the largest ocean on Earth?",
+    choices: ["Atlantic", "Indian", "Arctic", "Pacific"],
+    answer: "Pacific",
+  },
+  {
+    question: "Who wrote 'Romeo and Juliet'?",
+    choices: [
+      "Charles Dickens",
+      "William Shakespeare",
+      "Mark Twain",
+      "Jane Austen",
     ],
-    answer: "Hyper Text Markup Language",
+    answer: "William Shakespeare",
   },
   {
-    question: "3. Which method is used to add an element at the end of an array?",
-    options: ["push()", "pop()", "shift()", "unshift()"],
-    answer: "push()",
-  },
-  {
-    question: "4. What does CSS stand for?",
-    options: [
-      "Cascading Style Sheets",
-      "Creative Style System",
-      "Computer Style Sheets",
-      "Colorful Style Sheets",
-    ],
-    answer: "Cascading Style Sheets",
-  },
-  {
-    question: "5. Which symbol is used for single-line comments in JavaScript?",
-    options: ["//", "/* */", "#", "--"],
-    answer: "//",
+    question: "What is the chemical symbol for water?",
+    choices: ["H2O", "CO2", "O2", "NaCl"],
+    answer: "H2O",
   },
 ];
 
@@ -52,18 +47,18 @@ function renderQuiz() {
     questionText.textContent = q.question;
     questionDiv.appendChild(questionText);
 
-    q.options.forEach((option) => {
+    q.choices.forEach((choice) => {
       const label = document.createElement("label");
 
       const radio = document.createElement("input");
       radio.type = "radio";
       radio.name = `question${index}`;
-      radio.value = option;
+      radio.value = choice;
 
       radio.addEventListener("change", () => saveProgress());
 
       label.appendChild(radio);
-      label.appendChild(document.createTextNode(option));
+      label.appendChild(document.createTextNode(choice));
       questionDiv.appendChild(label);
     });
 
@@ -99,6 +94,7 @@ function loadProgress() {
     radios.forEach((radio) => {
       if (radio.value === progress[key]) {
         radio.checked = true;
+        radio.setAttribute("checked", "true");
       }
     });
   });
@@ -129,17 +125,7 @@ submitBtn.addEventListener("click", () => {
   localStorage.setItem("score", JSON.stringify(score));
 });
 
-// ==================== Load Saved Score ====================
-
-function loadScore() {
-  const savedScore = localStorage.getItem("score");
-  if (savedScore !== null) {
-    scoreDisplay.textContent = `Your score is ${JSON.parse(savedScore)} out of 5.`;
-  }
-}
-
 // ==================== Initialize ====================
 
 renderQuiz();
 loadProgress();
-loadScore();
